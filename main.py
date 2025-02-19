@@ -28,35 +28,31 @@ def main():
         raise ValueError("Не указаны TG_TOKEN или TG_CHAT_ID.")
 
     bot = telegram.Bot(token_tg)
-    delay = 1
 
-    while True:
-        try:
-            max_num = get_max_comic_num()
-            num = randint(1, max_num)
-            comics = get_comics(num)
-        except requests.exceptions.RequestException as e:
-            print(f"Ошибка при получении комикса: {e}")
-            sleep(60)
-            continue
+    try:
+        max_num = get_max_comic_num()
+        num = randint(1, max_num)
+        comics = get_comics(num)
+    except requests.exceptions.RequestException as e:
+        print(f"Ошибка при получении комикса: {e}")
+        sleep(60)
+        return
 
-        try:
-            comment = comics['alt']
-            photo_url = comics['img']
-        except KeyError as e:
-            print(f"Отсутствует ключ {e} в данных комикса.")
-            continue
+    try:
+        comment = comics['alt']
+        photo_url = comics['img']
+    except KeyError as e:
+        print(f"Отсутствует ключ {e} в данных комикса.")
+        return
 
-        if not photo_url.lower().endswith(('.png', '.jpg', '.jpeg')):
-            print(f"Пропущен комикс {num}: неподдерживаемый формат изображения.")
-            continue
+    if not photo_url.lower().endswith(('.png', '.jpg', '.jpeg')):
+        print(f"Пропущен комикс {num}: неподдерживаемый формат изображения.")
 
-        try:
-            bot.send_photo(chat_id=chat_id, photo=photo_url, caption=comment)
-        except Exception as e:
-            print(f"Ошибка отправки: {e}")
-
-        sleep(delay * 3600)
+    try:
+        bot.send_photo(chat_id=chat_id, photo=photo_url, caption=comment)
+    except Exception as e:
+        print(f"Ошибка отправки: {e}")
+        return
 
 
 if __name__ == '__main__':
