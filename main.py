@@ -35,7 +35,6 @@ def main():
         comics = get_comics(num)
     except requests.exceptions.RequestException as e:
         print(f"Ошибка при получении комикса: {e}")
-        sleep(60)
         return
 
     try:
