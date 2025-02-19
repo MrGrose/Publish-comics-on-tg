@@ -5,7 +5,7 @@ from time import sleep
 from environs import Env
 
 
-def get_comics_json(num: int) -> dict:
+def get_comics(num: int) -> dict:
     url = f'https://xkcd.com/{num}/info.0.json'
     response = requests.get(url)
     response.raise_for_status()
@@ -34,7 +34,7 @@ def main():
         try:
             max_num = get_max_comic_num()
             num = randint(1, max_num)
-            comics = get_comics_json(num)
+            comics = get_comics(num)
         except requests.exceptions.RequestException as e:
             print(f"Ошибка при получении комикса: {e}")
             sleep(60)
